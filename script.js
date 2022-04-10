@@ -1,49 +1,59 @@
-const form= document.getElementById('form');
-const input=document.getElementById('input');
+const form= document.getElementById("form");
+const input=document.getElementById("input");
 const todoUL =document.getElementById("todos");
-const todos= JSON.parse(localStorage.getItem('todos'));
+const todos= JSON.parse(localStorage.getItem("todos"));
 
 if(todos){
-    todos.forEach(todo=>{
+    todos.forEach((todo)=>{
         addTodo(todo);
-    })
+    });
 }
 
-form.addEventListener('submit', (e)=>{
+form.addEventListener("submit", (e)=>{
     e.preventDefault();
     addTodo();
 });
 function addTodo(todo){
-    const todoText= input.value;
+    let todoText= input.value;
+    if(todo){
+        todoText=todo.text;
+    }
 
     if(todoText){
         const todoE1= document.createElement("li");
+
+        if(todo && todo.completed){
+            todoE1.classList.add("completed");
+        }
         todoE1.innerText= todoText;
 
-        todoE1.addEventListener('click', ()=>{
-            todoE1.classList.toggle('completed');
+        todoE1.addEventListener("click", ()=>{
+            todoE1.classList.toggle("completed");
+
+            updateLS();
         });
 
         todoE1.addEventListener('dblclick',(e)=>{
             e.preventDefault();
             todoE1.remove();
+            updateLS();
         });
-        todos.appendChild(todoE1);
+        todoUL.appendChild(todoE1);
 
         input.value="";
-
+        updateLS();
     }
-    updateLS();
+    
 };
 
 function updateLS(){
-    const todosE1= document.querySelectorAll('li');
+    const todosE1= document.querySelectorAll("li");
     const todos=[];
 
-    todosE1.forEach(todos => {
+    todosE1.forEach((todoE1) => {
         todos.push({
-            text: todosE1.innerText,
-            completed: todosE1.classList.contains('completed'),
+            text: todoE1.innerText,
+            completed: todoE1.classList.contains("completed"),
         });
         
     });
